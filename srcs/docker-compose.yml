@@ -2,9 +2,9 @@ version: '3'
 
 services:
   nginx:
-    build:
+    build: 
       context: .
-      dockerfile: Dockerfile.nginx
+      dockerfile: ./requirements/nginx/Dockerfile
     ports:
       - "80:80"
     volumes:
@@ -15,7 +15,7 @@ services:
   wordpress:
     build:
       context: .
-      dockerfile: Dockerfile.wordpress
+      dockerfile: ./requirements/wordpress/Dockerfile
     depends_on:
       - db
     ports:
@@ -33,7 +33,7 @@ services:
   db:
     build:
       context: .
-      dockerfile: Dockerfile.mariadb
+      dockerfile: ./requirements/mariadb/Dockerfile
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: wordpressdb
