@@ -1,58 +1,40 @@
-version: '3.8'
-
+version: '3'
 services:
   nginx:
     build:
-      context: ./requirements/nginx
+      context: ./nginx
       dockerfile: Dockerfile
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - nginx-config:/etc/nginx/conf.d
-      - website-files:/var/www/html/wordpress
     networks:
-      - inception-network
+      - my_network
+    depends_on:
+      - wordpress
 
   wordpress:
     build:
-      context: ./requirements/wordpress
+      context: ./wordpress
       dockerfile: Dockerfile
-    depends_on:
-      - nginx
-      - mariadb
     volumes:
-      - website-files:/var/www/html/wordpress
-    environment:
-      WORDPRESS_DB_HOST: mariadb
-      WORDPRESS_DB_USER: your_wp_db_user
-      WORDPRESS_DB_PASSWORD: your_wp_db_password
-      WORDPRESS_DB_NAME: your_wp_db_name
-      WORDPRESS_CONFIG_EXTRA: |
-      /* Ajoutez ici des configurations WordPress supplémentaires si nécessaire */
-  networks:
-    - inception-network
-
+      - wordpress_data:/var/www/html
+    networks:
+      - my_network
 
   mariadb:
     build:
-      context: ./requirements/mariadb
+      context: ./mariadb
       dockerfile: Dockerfile
     volumes:
-      - mariadb-data:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: sonia
-      MYSQL_DATABASE: shammouc
-      MYSQL_USER: shammouc
-      MYSQL_PASSWORD: sonia
+      MYSQL_ROOT_PASSWORD: password
     networks:
-      - inception-network
-
-volumes:
-  nginx-config:
-  website-files:
-  mariadb-data:
+      - my_network
 
 networks:
-  inception-network:
-    driver: bridge
+  my_network:
+
+volumes:
+  wordpress_data:
+  mariadb_data:
