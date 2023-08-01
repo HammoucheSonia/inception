@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: ./requirements/nginx/Dockerfile
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
       - /home/shammouc/data/nginx:/etc/nginx/conf.d
     networks:
@@ -19,7 +19,7 @@ services:
     depends_on:
       - db
     ports:
-      - "9000:9000"
+      - "9000:80"
     volumes:
       - /home/shammouc/data/wordpress:/var/www/html
     environment:
@@ -34,6 +34,7 @@ services:
     build:
       context: .
       dockerfile: ./requirements/mariadb/Dockerfile
+    image: mariadb:latest
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: wordpressdb
