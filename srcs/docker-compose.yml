@@ -2,49 +2,43 @@ version: '3'
 
 services:
   nginx:
-    build: 
-      context: .
-      dockerfile: ./requirements/nginx/Dockerfile
+    image: nginx:alpine
     ports:
-      - "8080:80"
+      - "8081:80"
     volumes:
-      - /home/shammouc/data/nginx:/etc/nginx/conf.d
+      - ./nginx/conf:/etc/nginx/conf.d
     networks:
       - my_network
 
   wordpress:
-    build:
-      context: .
-      dockerfile: ./requirements/wordpress/Dockerfile
+    image: wordpress:latest
     depends_on:
       - db
     ports:
-      - "9000:80"
+      - "9001:80"
     volumes:
-      - /home/shammouc/data/wordpress:/var/www/html
+      - ./wordpress:/var/www/html
     environment:
       WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_NAME: wordpressdb
-      WORDPRESS_DB_USER: wordpressuser
-      WORDPRESS_DB_PASSWORD: wordpresspassword
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: password
     networks:
       - my_network
 
   db:
-    build:
-      context: .
-      dockerfile: ./requirements/mariadb/Dockerfile
-    image: mariadb:latest
+    image: mariadb:10.6
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: wordpressdb
-      MYSQL_USER: wordpressuser
-      MYSQL_PASSWORD: wordpresspassword
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: password
     volumes:
-      - /home/shammouc/data/mysql:/var/lib/mysql
+      - ./mariadb:/var/lib/mysql
     networks:
       - my_network
 
 networks:
   my_network:
+
 
